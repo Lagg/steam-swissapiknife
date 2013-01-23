@@ -1,11 +1,13 @@
-import urllib2, json, sys
+#!/usr/bin/env python
+
+import urllib.request, urllib.error, urllib.parse, json, sys
 from pprint import pprint
 
 key = "KEY"
 request_url = "http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v0001/?key=" + key
 url_root = "http://api.steampowered.com/"
 
-apilist = json.load(urllib2.urlopen(request_url))
+apilist = json.loads(urllib.request.urlopen(request_url).read().decode("utf-8"))
 api_names = []
 api_methods = {}
 
