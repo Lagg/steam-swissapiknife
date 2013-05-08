@@ -1,20 +1,24 @@
 #!/usr/bin/env python
 
 import urllib.request, urllib.error, urllib.parse, json, sys
+import argparse
 from pprint import pprint
 
-key = "KEY"
+cmdline = argparse.ArgumentParser(description = "Carve up some API docs in list or wiki format")
+cmdline.add_argument("-f", "--format", choices = ["list", "wiki"], default = "list",
+        help = "Print out API docs in condensed list form or wikitext")
+cmdline.add_argument("key", help = "Your API key")
+
+opts = cmdline.parse_args()
+
+key = opts.key
 request_url = "http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v0001/?key=" + key
 url_root = "http://api.steampowered.com/"
 
 apilist = json.loads(urllib.request.urlopen(request_url).read().decode("utf-8"))
 api_names = []
 api_methods = {}
-
-try:
-    mw_skeleton = (sys.argv[1] == "mw")
-except IndexError:
-    mw_skeleton = False
+mw_skeleton = (opts.format == "wiki")
 
 for api in apilist["apilist"]["interfaces"]:
     api_names.append(api["name"])
