@@ -5,9 +5,18 @@ import argparse
 from pprint import pprint
 
 cmdline = argparse.ArgumentParser(description = "Carve up some API docs in list or wiki format")
+
+cmdline.add_argument("key",
+        help = "Your API key")
+
 cmdline.add_argument("-f", "--format", choices = ["list", "wiki"], default = "list",
         help = "Print out API docs in condensed list form or wikitext")
-cmdline.add_argument("key", help = "Your API key")
+
+cmdline.add_argument("-i", "--interface", default = None,
+        help = "Only print methods in this interface")
+
+cmdline.add_argument("-m", "--method", default = None,
+        help = "Only print methods with this name")
 
 opts = cmdline.parse_args()
 
@@ -27,8 +36,14 @@ for api in apilist["apilist"]["interfaces"]:
 api_names.sort()
 
 for api in api_names:
+    if opts.interface and api != opts.interface:
+        continue
+
     methods = api_methods[api]
     for method in methods:
+        if opts.method and method["name"] != opts.method:
+            continue
+
         querypart = ["key=" + key]
         for param in method["parameters"]:
             name = param["name"]
@@ -63,4 +78,3 @@ for api in api_names:
         if mw_skeleton:
             print("\n== Result data ==\n")
         print('\n')
-    print('\n')
