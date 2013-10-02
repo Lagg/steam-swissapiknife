@@ -41,6 +41,7 @@ for api in api_names:
 
     methods = api_methods[api]
     for method in methods:
+        param_doc_lines = []
         if opts.method and method["name"] != opts.method:
             continue
 
@@ -49,12 +50,19 @@ for api in api_names:
             name = param["name"]
             ptype = param["type"]
             optional = param["optional"]
+            desc = param.get("description", '')
 
             ptypewrapper = "<{1}>"
             if optional: ptypewrapper = "[{1}]"
 
             if name != "key":
                 querypart.append(("{0}=" + ptypewrapper).format(name, ptype))
+
+            if mw_skeleton:
+                if optional: name = "{{API optional|" + name + "}}"
+                param_doc_lines.append(";{0} ''({1})'': {2}".format(name, ptype, desc))
+            else:
+                param_doc_lines.append(name + ": " + desc)
 
         fullurl = url_root + api + '/' + method["name"] + '/v' + str(method["version"])
         if mw_skeleton:
@@ -63,17 +71,7 @@ for api in api_names:
         else:
             print(method["httpmethod"] + ' ' + fullurl + '?' + "&".join(querypart))
 
-        for param in method["parameters"]:
-            optional = param["optional"]
-            ptype = param["type"]
-            name = param["name"]
-            desc = param["description"]
-
-            if mw_skeleton:
-                if optional: name = "{{API optional|" + name + "}}"
-                print(";" + name + " ''(" + ptype + ")'': " + desc)
-            else:
-                print(param["name"] + ": " + param["description"])
+        print('\n'.join(param_doc_lines))
 
         if mw_skeleton:
             print("\n== Result data ==\n")
