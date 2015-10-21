@@ -2,7 +2,13 @@
 """steam-swissapiknife
 see README.md"""
 
-import urllib.request, urllib.error, urllib.parse, json, sys
+# Python 2 <-> 3 glue
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
+
+import json, sys
 import argparse
 
 def parse_args(args):
@@ -41,7 +47,7 @@ def main(opts=None):
     request_url = "http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v0001/?key=" + key
     url_root = "http://api.steampowered.com/"
 
-    apilist = json.loads(urllib.request.urlopen(request_url).read().decode("utf-8"))
+    apilist = json.loads(urlopen(request_url).read().decode("utf-8"))
     api_names = []
     api_methods = {}
     mw_skeleton = (opts.format == "wiki")
