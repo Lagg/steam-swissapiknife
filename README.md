@@ -17,6 +17,9 @@ for examples on the structure to use for the JSON output documentation.
 Run `python setup.py install`
 
 ### Tests
+
+[![Build Status](https://travis-ci.org/Lagg/steam-swissapiknife.png)](https://travis-ci.org/Lagg/steam-swissapiknife)
+
 Tests are run using `nose`.
 
 Set the environment variable `STEAM_API_KEY` to your Steam API key before running tests.
