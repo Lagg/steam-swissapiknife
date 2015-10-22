@@ -5,8 +5,11 @@ from steamswissapiknife import main
 import unittest
 import os
 from contextlib import contextmanager
-from io import StringIO
 import sys
+if sys.version_info[0] < 3:
+    from StringIO import StringIO
+else:
+    from io import StringIO
 
 key = os.environ['STEAM_API_KEY']
 
